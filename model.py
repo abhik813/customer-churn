@@ -40,7 +40,7 @@ minscaler = MaxAbsScaler().fit(input_df[cols_scaled])
 
 input_df[cols_scaled] = minscaler.transform(input_df[cols_scaled])
 
-encoder = OneHotEncoder(sparse_output=False)
+encoder = OneHotEncoder(sparse=False)
 encoder.fit(input_df[categorical_cols])
 encoded_cols = list(encoder.get_feature_names_out(categorical_cols))
 input_df[encoded_cols] = encoder.transform(input_df[categorical_cols])
