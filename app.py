@@ -6,6 +6,9 @@ import model as ml
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import MaxAbsScaler
 from sklearn.preprocessing import OneHotEncoder
+from keras.models import load_model
+import tensorflow as tf
+
 
 encoded_cols = ml.encoded_cols
 categorical_cols = ml.categorical_cols
@@ -16,7 +19,8 @@ minscaler = ml.minscaler
 
 app = Flask(__name__)
 
-model= pickle.load(open('model.pkl','rb'))
+model = tf.keras.models.load_model("network.h5")
+
 
 @app.route('/', methods=['POST', 'GET'])
 def predict():
@@ -34,7 +38,7 @@ def predict():
         st = str(finalarray[0][0])
         loc = str(finalarray[0][4])
         k = 42
-        if (st == 'male') or (st == 'female'):
+        if (st == 'Male') or (st == 'Female'):
             k = 1
         if k == 42:
             return render_template('index.html',pred='Invalid gender description!! please write male/female')
@@ -73,11 +77,12 @@ def predict():
         x_input = input(finalarray)
         prediction=model.predict(x_input)
         output= prediction[0]
+        print(output)
 
-        if output == 1:
-            return render_template('index.html',pred='Prediction is 1')
+        if output >= 0.5:
+            return render_template('index.html',pred='Churn')
         else:
-            return render_template('index.html',pred='Prediction is 0')
+            return render_template('index.html',pred='Not Churn')
 
 
     else:
